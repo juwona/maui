@@ -4,115 +4,145 @@
     x:Class="Maui.Controls.Sample.MainPage"
     xmlns:local="clr-namespace:Maui.Controls.Sample">
 
+    <!--<ContentPage.MenuBarItems>
+        <MenuBarItem Text="File">
+            <MenuFlyoutItem Text="Exit"
+                            Command="{Binding SetLabelBackgroundColor}"  CommandParameter="Orange" x:Name="ExitThing" />
+        </MenuBarItem>
+        <MenuBarItem Text="Locations">
+            <MenuFlyoutSubItem Text="Change Location">
+                <MenuFlyoutItem Text="Redmond, USA"
+                                Command="{Binding SetLabelBackgroundColor}"
+                                CommandParameter="Purple" />
+                <MenuFlyoutItem Text="London, UK"
+                                Command="{Binding SetLabelBackgroundColor}"
+                                CommandParameter="Pink" />
+                <MenuFlyoutItem Text="Berlin, DE"
+                                Command="{Binding SetLabelBackgroundColor}"
+                                CommandParameter="Green"/>
+            </MenuFlyoutSubItem>
+            <MenuFlyoutItem Text="Add Location"
+                            Command="{Binding SetLabelBackgroundColor}"  CommandParameter="Blue"/>
+        </MenuBarItem>
+        <MenuBarItem Text="View">
+            <MenuFlyoutItem Text="Refresh"
+                            Command="{Binding SetLabelBackgroundColor}"  CommandParameter="Red"/>
+            <MenuFlyoutItem Text="Change Theme"
+                            Command="{Binding SetLabelBackgroundColor}" CommandParameter="White" />
+        </MenuBarItem>
+    </ContentPage.MenuBarItems>-->
+
+    <ContentPage.Content>
     <VerticalStackLayout Spacing="10">
         <HorizontalStackLayout Spacing="10">
             <Button Text="Increment" Clicked="Button_Clicked" FontSize="30" BackgroundColor="DarkGray">
-                <Button.ContextActions>
-                    <MenuItem Text="Increment by 10" Clicked="OnSuperIncrementMenuItemClicked" CommandParameter="10"></MenuItem>
-                    <MenuItem Text="Increment by 20" Clicked="OnSuperIncrementMenuItemClicked" CommandParameter="20"></MenuItem>
+                <Button.ContextFlyout>
+                    <MenuFlyoutItem Text="Increment by 10" Clicked="OnSuperIncrementMenuItemClicked" CommandParameter="10"></MenuFlyoutItem>
+                    <MenuFlyoutItem Text="Increment by 20" Clicked="OnSuperIncrementMenuItemClicked" CommandParameter="20"></MenuFlyoutItem>
                     <MenuFlyoutSubItem Text="More options">
                         <MenuFlyoutItem Text="Increment by 1,000!" Clicked="OnSuperIncrementMenuItemClicked" CommandParameter="1000"></MenuFlyoutItem>
                         <MenuFlyoutItem Text="Increment by 1,000,000!" Clicked="OnSuperIncrementMenuItemClicked" CommandParameter="1000000"></MenuFlyoutItem>
                     </MenuFlyoutSubItem>
-                </Button.ContextActions>
+                </Button.ContextFlyout>
             </Button>
             <Label Text="{Binding CounterValue}" FontSize="30" VerticalOptions="Center"></Label>
         </HorizontalStackLayout>
 
         <Label BackgroundColor="{Binding LabelBackgroundColor}" Text="Choose label color here" FontSize="30">
-            <Label.ContextActions>
-                <MenuItem Text="Orange" Command="{Binding SetLabelBackgroundColor}" CommandParameter="Orange">
-                    <MenuItem.IconImageSource>
+            <Label.ContextFlyout>
+                <MenuFlyoutItem Text="Orange" Command="{Binding SetLabelBackgroundColor123}" CommandParameter="Orange">
+                    <MenuFlyoutItem.IconImageSource>
                         <FontImageSource Glyph="X" FontFamily="Arial" Color="Orange" />
-                    </MenuItem.IconImageSource>
-                </MenuItem>
-                <MenuItem Text="Red" Command="{Binding SetLabelBackgroundColor}" CommandParameter="Red">
-                    <MenuItem.IconImageSource>
+                    </MenuFlyoutItem.IconImageSource>
+                </MenuFlyoutItem>
+                <MenuFlyoutItem Text="Red" Command="{Binding SetLabelBackgroundColor}" CommandParameter="Red">
+                    <MenuFlyoutItem.IconImageSource>
                         <FontImageSource Glyph="X" FontFamily="Arial" Color="Red" />
-                    </MenuItem.IconImageSource>
-                </MenuItem>
-                <MenuItem Text="Blue" Command="{Binding SetLabelBackgroundColor}" CommandParameter="Blue">
-                    <MenuItem.IconImageSource>
+                    </MenuFlyoutItem.IconImageSource>
+                </MenuFlyoutItem>
+                <MenuFlyoutItem Text="Blue" Command="{Binding SetLabelBackgroundColor}" CommandParameter="Blue">
+                    <MenuFlyoutItem.IconImageSource>
                         <FontImageSource Glyph="X" FontFamily="Arial" Color="Blue" />
-                    </MenuItem.IconImageSource>
-                </MenuItem>
-                <MenuItem Text="Green" Command="{Binding SetLabelBackgroundColor}" CommandParameter="Green">
-                    <MenuItem.IconImageSource>
+                    </MenuFlyoutItem.IconImageSource>
+                </MenuFlyoutItem>
+                <MenuFlyoutItem Text="Green" Command="{Binding SetLabelBackgroundColor}" CommandParameter="Green">
+                    <MenuFlyoutItem.IconImageSource>
                         <FontImageSource Glyph="X" FontFamily="Arial" Color="Green" />
-                    </MenuItem.IconImageSource>
-                </MenuItem>
-                <MenuItem Text="Pink" Command="{Binding SetLabelBackgroundColor}" CommandParameter="Pink">
-                    <MenuItem.IconImageSource>
+                    </MenuFlyoutItem.IconImageSource>
+                </MenuFlyoutItem>
+                <MenuFlyoutItem Text="Pink" Command="{Binding SetLabelBackgroundColor}" CommandParameter="Pink">
+                    <MenuFlyoutItem.IconImageSource>
                         <FontImageSource Glyph="X" FontFamily="Arial" Color="Pink" />
-                    </MenuItem.IconImageSource>
-                </MenuItem>
-                <MenuItem Text="Brown" Command="{Binding SetLabelBackgroundColor}" CommandParameter="Brown">
-                    <MenuItem.IconImageSource>
+                    </MenuFlyoutItem.IconImageSource>
+                </MenuFlyoutItem>
+                <MenuFlyoutItem Text="Brown" Command="{Binding SetLabelBackgroundColor}" CommandParameter="Brown">
+                    <MenuFlyoutItem.IconImageSource>
                         <FontImageSource Glyph="X" FontFamily="Arial" Color="Brown" />
-                    </MenuItem.IconImageSource>
-                </MenuItem>
-            </Label.ContextActions>
+                    </MenuFlyoutItem.IconImageSource>
+                </MenuFlyoutItem>
+            </Label.ContextFlyout>
         </Label>
 
         <Label MaximumHeightRequest="400" />
 
         <Label Text="Right-click to pick my color" x:Name="ColorLabel">
-            <Label.ContextActions>
-                <MenuItem Text="Make label red" Clicked="MakeLabelRed">
-                    <MenuItem.IconImageSource>
+            <Label.ContextFlyout>
+                <MenuFlyoutItem Text="Make label red" Clicked="MakeLabelRed">
+                    <MenuFlyoutItem.IconImageSource>
                         <FontImageSource Glyph="X" FontFamily="Arial" Color="Red" />
-                    </MenuItem.IconImageSource>
-                </MenuItem>
-                <MenuItem Text="Make label blue" Clicked="MakeLabelBlue">
-                    <MenuItem.IconImageSource>
+                    </MenuFlyoutItem.IconImageSource>
+                </MenuFlyoutItem>
+                <MenuFlyoutItem Text="Make label blue" Clicked="MakeLabelBlue">
+                    <MenuFlyoutItem.IconImageSource>
                         <FontImageSource Glyph="X" FontFamily="Arial" Color="Blue" />
-                    </MenuItem.IconImageSource>
-                </MenuItem>
+                    </MenuFlyoutItem.IconImageSource>
+                </MenuFlyoutItem>
                 <MenuFlyoutSeparator />
                 <MenuFlyoutSubItem Text="More colors">
                     <MenuFlyoutItem Text="Hot pink" Clicked="MakeLabelHotPink">
-                        <MenuItem.IconImageSource>
+                        <MenuFlyoutItem.IconImageSource>
                             <FontImageSource Glyph="X" FontFamily="Arial" Color="HotPink" />
-                        </MenuItem.IconImageSource>
+                        </MenuFlyoutItem.IconImageSource>
                     </MenuFlyoutItem>
                     <MenuFlyoutItem Text="Pale Goldenrod" Clicked="MakeLabelPaleGoldenrod">
-                        <MenuItem.IconImageSource>
+                        <MenuFlyoutItem.IconImageSource>
                             <FontImageSource Glyph="X" FontFamily="Arial" Color="PaleGoldenrod" />
-                        </MenuItem.IconImageSource>
+                        </MenuFlyoutItem.IconImageSource>
                     </MenuFlyoutItem>
                 </MenuFlyoutSubItem>
-            </Label.ContextActions>
+            </Label.ContextFlyout>
         </Label>
 
         <Label MaximumHeightRequest="400" />
 
         <Label Text="Choose menu image here" FontSize="30">
-            <Label.ContextActions>
-                <MenuItem Text="Check menu happiness" IconImageSource="{Binding CurrentIconImageSource}" Clicked="OnHappinessMenuItemClicked"></MenuItem>
+            <Label.ContextFlyout>
+                <MenuFlyoutItem Text="Check menu happiness" IconImageSource="{Binding CurrentIconImageSource}" Clicked="OnHappinessMenuItemClicked"></MenuFlyoutItem>
                 <MenuFlyoutSeparator />
-                <MenuItem Text="Make menu Happy" IconImageSource="{Binding HappyImageSource}" Clicked="OnChooseHappyMenuItemClicked"></MenuItem>
-                <MenuItem Text="Make menu Medium" IconImageSource="{Binding MediumImageSource}" Clicked="OnChooseMediumMenuItemClicked"></MenuItem>
-                <MenuItem Text="Make menu Not happy" IconImageSource="{Binding NotHappyImageSource}" Clicked="OnChooseNotHappyMenuItemClicked"></MenuItem>
-            </Label.ContextActions>
+                <MenuFlyoutItem Text="Make menu Happy" IconImageSource="{Binding HappyImageSource}" Clicked="OnChooseHappyMenuItemClicked"></MenuFlyoutItem>
+                <MenuFlyoutItem Text="Make menu Medium" IconImageSource="{Binding MediumImageSource}" Clicked="OnChooseMediumMenuItemClicked"></MenuFlyoutItem>
+                <MenuFlyoutItem Text="Make menu Not happy" IconImageSource="{Binding NotHappyImageSource}" Clicked="OnChooseNotHappyMenuItemClicked"></MenuFlyoutItem>
+            </Label.ContextFlyout>
         </Label>
 
         <Entry Placeholder="No context here">
         </Entry>
 
         <Entry Placeholder="Has a context menu">
-            <Entry.ContextActions>
-                <MenuItem Text="Entry menu 1" Clicked="OnEntryMenuItemClicked"></MenuItem>
-                <MenuItem Text="Entry menu 2" Clicked="OnEntryMenuItemClicked"></MenuItem>
-                <MenuItem Text="Entry menu 3" Clicked="OnEntryMenuItemClicked"></MenuItem>
-            </Entry.ContextActions>
+            <Entry.ContextFlyout>
+                <MenuFlyoutItem Text="Entry menu 1" Clicked="OnEntryMenuItemClicked"></MenuFlyoutItem>
+                <MenuFlyoutItem Text="Entry menu 2" Clicked="OnEntryMenuItemClicked"></MenuFlyoutItem>
+                <MenuFlyoutItem Text="Entry menu 3" Clicked="OnEntryMenuItemClicked"></MenuFlyoutItem>
+            </Entry.ContextFlyout>
         </Entry>
 
         <WebView Source="https://bing.com" MinimumHeightRequest="300" x:Name="wv">
-            <WebView.ContextActions>
-                <MenuItem Text="WebView menu 1" Clicked="OnWebViewMenuItemClicked"></MenuItem>
-                <MenuItem Text="WebView menu 2" Clicked="OnWebViewMenuItemClicked"></MenuItem>
-                <MenuItem Text="WebView menu 3" Clicked="OnWebViewMenuItemClicked"></MenuItem>
-            </WebView.ContextActions>
+            <WebView.ContextFlyout>
+                <MenuFlyoutItem Text="WebView menu 1" Clicked="OnWebViewMenuItemClicked"></MenuFlyoutItem>
+                <MenuFlyoutItem Text="WebView menu 2" Clicked="OnWebViewMenuItemClicked"></MenuFlyoutItem>
+                <MenuFlyoutItem Text="WebView menu 3" Clicked="OnWebViewMenuItemClicked"></MenuFlyoutItem>
+            </WebView.ContextFlyout>
         </WebView>
     </VerticalStackLayout>
+    </ContentPage.Content>
 </ContentPage>

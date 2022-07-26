@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Runtime.CompilerServices;
+using Microsoft.Maui;
 using Microsoft.Maui.Controls.Internals;
 using Microsoft.Maui.Graphics;
 
 namespace Microsoft.Maui.Controls
 {
 	/// <include file="../../docs/Microsoft.Maui.Controls/View.xml" path="Type[@FullName='Microsoft.Maui.Controls.View']/Docs" />
-	public partial class View : VisualElement, IViewController, IGestureController, IGestureRecognizers, IContextActionContainer
-	{
+	public partial class View : VisualElement, IViewController, IGestureController, IGestureRecognizers
+    {
 		protected internal IGestureController GestureController => this;
 
 		/// <include file="../../docs/Microsoft.Maui.Controls/View.xml" path="//Member[@MemberName='VerticalOptionsProperty']/Docs" />
@@ -185,21 +185,21 @@ namespace Microsoft.Maui.Controls
 		{
 			this.PropagateBindingContext(GestureRecognizers);
 
-			PropagateBindingContextToContextActions();
+			//PropagateBindingContextToContextActions();
 
 			base.OnBindingContextChanged();
 		}
 
-		private void PropagateBindingContextToContextActions()
-		{
-			if (HasContextActions)
-			{
-				for (var i = 0; i < _contextActions.Count; i++)
-				{
-					SetInheritedBindingContext(_contextActions[i], BindingContext);
-				}
-			}
-		}
+		//private void PropagateBindingContextToContextActions()
+		//{
+		//	if (HasContextActions)
+		//	{
+		//		for (var i = 0; i < _contextActions.Count; i++)
+		//		{
+		//			SetInheritedBindingContext(_contextActions[i], BindingContext);
+		//		}
+		//	}
+		//}
 
 		static void MarginPropertyChanged(BindableObject bindable, object oldValue, object newValue)
 		{
@@ -214,63 +214,69 @@ namespace Microsoft.Maui.Controls
 				throw new InvalidOperationException($"Only one {nameof(PinchGestureRecognizer)} per view is allowed");
 		}
 
-		ObservableCollection<MenuItem> _contextActions;
-		List<MenuItem> _currentContextActions;
+        //ObservableCollection<MenuItem> _contextActions;
+        //List<MenuItem> _currentContextActions;
+        ContextFlyout _contextFlyout;
 
-		public IList<MenuItem> ContextActions
-		{
+		public override IContextFlyout ContextFlyout
+        {
 			get
 			{
-				if (_contextActions == null)
+				if (_contextFlyout == null)
 				{
-					_contextActions = new ObservableCollection<MenuItem>();
-					_contextActions.CollectionChanged += OnContextActionsChanged;
+					_contextFlyout = new ContextFlyout();
+					//NotifyHandler(nameof(IViewHandler.SetContextFlyout), _contextFlyout);
 				}
-
-				return _contextActions;
+				return _contextFlyout;
 			}
 		}
 
-		IList<IMenuElement> IContextActionContainer.ContextActions
-		{
-			get => ContextActions.Cast<IMenuElement>().ToList();
-		}
+		//void NotifyHandler(string action, IContextFlyout view)
+		//{
+		//	var args = new Maui.Handlers.ContextFlyoutHandlerUpdate(view);
+		//	Handler?.Invoke(action, args);
+		//}
 
-		public bool HasContextActions
-		{
-			get { return _contextActions != null && _contextActions.Count > 0 && IsEnabled; }
-		}
+		//IList<IMenuElement> IContextActionContainer.ContextActions
+		//{
+		//	get => ContextActions.Cast<IMenuElement>().ToList();
+		//}
 
-		void OnContextActionsChanged(object sender, NotifyCollectionChangedEventArgs e)
-		{
-			for (var i = 0; i < _contextActions.Count; i++)
-			{
-				SetInheritedBindingContext(_contextActions[i], BindingContext);
-				_contextActions[i].Parent = this;
-				_currentContextActions?.Remove(_contextActions[i]);
-			}
+		//public bool HasContextActions
+		//{
+		//	get { return _contextActions != null && _contextActions.Count > 0 && IsEnabled; }
+		//}
 
-			if (_currentContextActions != null)
-			{
-				foreach (MenuItem item in _currentContextActions)
-				{
-					item.Parent = null;
-				}
-			}
+		//void OnContextActionsChanged(object sender, NotifyCollectionChangedEventArgs e)
+		//{
+		//	for (var i = 0; i < _contextActions.Count; i++)
+		//	{
+		//		SetInheritedBindingContext(_contextActions[i], BindingContext);
+		//		_contextActions[i].Parent = this;
+		//		_currentContextActions?.Remove(_contextActions[i]);
+		//	}
 
-			_currentContextActions = new List<MenuItem>(_contextActions);
+		//	if (_currentContextActions != null)
+		//	{
+		//		foreach (MenuItem item in _currentContextActions)
+		//		{
+		//			item.Parent = null;
+		//		}
+		//	}
 
-			OnPropertyChanged(nameof(HasContextActions));
-		}
+		//	_currentContextActions = new List<MenuItem>(_contextActions);
 
-		protected override void OnPropertyChanged([CallerMemberName] string propertyName = null)
-		{
-			if (propertyName == nameof(IsEnabled))
-			{
-				OnPropertyChanged(nameof(HasContextActions));
-			}
+		//	OnPropertyChanged(nameof(HasContextActions));
+		//}
 
-			base.OnPropertyChanged(propertyName);
-		}
+		//protected override void OnPropertyChanged([CallerMemberName] string propertyName = null)
+		//{
+		//	if (propertyName == nameof(IsEnabled))
+		//	{
+		//		OnPropertyChanged(nameof(HasContextActions));
+		//	}
+
+		//	base.OnPropertyChanged(propertyName);
+		//}
 	}
 }

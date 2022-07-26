@@ -19,32 +19,51 @@ namespace Maui.Controls.Sample
 			InitializeComponent();
 
 
-			SetLabelBackgroundColor = new Command<string>(
-				execute: (string arg) =>
+			SetLabelBackgroundColor = new Command(
+				execute: (object arg) =>
 				{
-					LabelBackgroundColor = Color.Parse(arg);
+					LabelBackgroundColor = Color.Parse(arg?.ToString());
 					OnPropertyChanged(nameof(LabelBackgroundColor));
 				});
+
+			ExitThing.PropertyChanging += ExitThing_PropertyChanging;
+			ExitThing.PropertyChanged += ExitThing_PropertyChanged;
 
 			BindingContext = this;
 
 			//wv.HandlerChanged += OnWebViewHandlerChanged;
 		}
 
-//		private async void OnWebViewHandlerChanged(object sender, EventArgs e)
-//		{
-//			var platformView = wv.Handler?.PlatformView;
-//			if (platformView != null)
-//			{
-//#if WINDOWS
-//				var windowsWebView = (Microsoft.UI.Xaml.Controls.WebView2)platformView;
-//				await windowsWebView.EnsureCoreWebView2Async();
-//				windowsWebView.CoreWebView2.Settings.AreDefaultContextMenusEnabled = false;
-//#else
-//				await Task.Delay(0);
-//#endif
-//			}
-//		}
+		private void ExitThing_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+		{
+			if (e.PropertyName == "Command")
+			{
+				// TODO: Why?
+			}
+		}
+
+		private void ExitThing_PropertyChanging(object sender, PropertyChangingEventArgs e)
+		{
+			if (e.PropertyName == "Command")
+			{
+				// TODO: Why?
+			}
+		}
+
+		//		private async void OnWebViewHandlerChanged(object sender, EventArgs e)
+		//		{
+		//			var platformView = wv.Handler?.PlatformView;
+		//			if (platformView != null)
+		//			{
+		//#if WINDOWS
+		//				var windowsWebView = (Microsoft.UI.Xaml.Controls.WebView2)platformView;
+		//				await windowsWebView.EnsureCoreWebView2Async();
+		//				windowsWebView.CoreWebView2.Settings.AreDefaultContextMenusEnabled = false;
+		//#else
+		//				await Task.Delay(0);
+		//#endif
+		//			}
+		//		}
 
 		public ICommand SetLabelBackgroundColor { get; init; }
 
@@ -63,7 +82,7 @@ namespace Maui.Controls.Sample
 
 		private void OnSuperIncrementMenuItemClicked(object sender, EventArgs e)
 		{
-			var menuItem = (MenuItem)sender;
+			var menuItem = (MenuFlyoutItem)sender;
 			var incrementAmount = int.Parse((string)menuItem.CommandParameter);
 			count += incrementAmount;
 			OnPropertyChanged(nameof(CounterValue));

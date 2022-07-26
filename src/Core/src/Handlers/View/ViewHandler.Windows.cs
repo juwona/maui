@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Linq;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Controls.Primitives;
 using PlatformView = Microsoft.UI.Xaml.FrameworkElement;
 
 namespace Microsoft.Maui.Handlers
@@ -18,82 +19,48 @@ namespace Microsoft.Maui.Handlers
 				platformView.GotFocus += OnPlatformViewGotFocus;
 				platformView.LostFocus += OnPlatformViewLostFocus;
 
-				if (platformView is UIElement uiElement)
-				{
-					if (VirtualView is IContextActionContainer contextActionContainer)
-					{
-						if (contextActionContainer.ContextActions?.Any() == true)
-						{
-							var newFlyout = new MenuFlyout();
-							AddMenuItems(contextActionContainer.ContextActions, newFlyout.Items.Add);
-							uiElement.ContextFlyout = newFlyout;
-						}
-					}
-				}
+				//if (platformView is UIElement uiElement)
+				//{
+				//	if (VirtualView is IContextActionContainer contextActionContainer)
+				//	{
+				//		if (contextActionContainer.ContextActions?.Any() == true)
+				//		{
+				//			var newFlyout = new MenuFlyout();
+				//			AddMenuItems(contextActionContainer.ContextActions, newFlyout.Items.Add);
+				//			uiElement.ContextFlyout = newFlyout;
+				//		}
+				//	}
+				//}
 			}
 		}
 
-		void AddMenuItems(IList<IMenuElement> menuItems, Action<MenuFlyoutItemBase> addMenuItem)
-		{
-			foreach (var menuItem in menuItems)
-			{
-				switch (menuItem)
-				{
-					case IMenuFlyoutSubItem menuFlyoutSubItem:
-						var newSubItem = new MenuFlyoutSubItem();
+		//void AddMenuItems(IList<IMenuElement> menuItems, Action<MenuFlyoutItemBase> addMenuItem)
+		//{
+		//	foreach (var menuItem in menuItems)
+		//	{
+		//		var platformThing = menuItem.ToPlatform();
+		//		addMenuItem(platformThing);
+		//	}
+		//}
 
-						// TODO: Need this code more generic so that flyout items and other items can share code paths
-						//UpdateNativeMenuItem(menuItem, newItem);
-						newSubItem.Text = menuFlyoutSubItem.Text;
-						AddMenuItems(menuFlyoutSubItem, newSubItem.Items.Add);
+		//private void UpdateNativeMenuItem(IMenuElement source, MenuFlyoutItem destination)
+		//{
+		//	// TODO: Respect these settings too, if possible
+		//	//menuItem.Font
 
-						addMenuItem(newSubItem);
-						break;
+		//	destination.CharacterSpacing = source.CharacterSpacing.ToEm();
+		//	destination.IsEnabled = source.IsEnabled;
+		//	destination.Text = source.Text;
+		//	destination.Icon = source.Source?.ToIconSource(MauiContext!)?.CreateIconElement();
 
-					case IMenuFlyoutSeparator menuFlyoutSeparator:
-						var newSeparator = new MenuFlyoutSeparator();
-						addMenuItem(newSeparator);
-						break;
-
-					default:
-						var newItem = new MenuFlyoutItem();
-						UpdateNativeMenuItem(menuItem, newItem);
-						if (menuItem is INotifyPropertyChanged npc)
-						{
-							// TODO: Super hack. This is so that changes to the MAUI controls are reflected in the native menu items
-							// TODO: If we can move all this MenuItem code to the Controls package, we can more closely follow the pattern used in other controls
-							npc.PropertyChanged += (object? sender, PropertyChangedEventArgs e) =>
-							{
-								var changedMenuItem = (IMenuElement)sender!;
-								UpdateNativeMenuItem(changedMenuItem, newItem);
-							};
-						}
-						newItem.Click += (_, __) => menuItem.Clicked();
-
-						addMenuItem(newItem);
-						break;
-				}
-			}
-		}
-
-		private void UpdateNativeMenuItem(IMenuElement source, MenuFlyoutItem destination)
-		{
-			// TODO: Respect these settings too, if possible
-			//menuItem.Font
-
-			destination.CharacterSpacing = source.CharacterSpacing.ToEm();
-			destination.IsEnabled = source.IsEnabled;
-			destination.Text = source.Text;
-			destination.Icon = source.Source?.ToIconSource(MauiContext!)?.CreateIconElement();
-
-			// TODO: How to expose this platform-specific property for Windows only? Maybe something like this: https://docs.microsoft.com/dotnet/maui/windows/platform-specifics/listview-selectionmode
-			destination.KeyboardAccelerators.Add(
-				new UI.Xaml.Input.KeyboardAccelerator
-				{
-					Modifiers = global::Windows.System.VirtualKeyModifiers.Control,
-					Key = (global::Windows.System.VirtualKey)(char.ToUpperInvariant(source.Text[0])),
-				});
-		}
+		//	// TODO: How to expose this platform-specific property for Windows only? Maybe something like this: https://docs.microsoft.com/dotnet/maui/windows/platform-specifics/listview-selectionmode
+		//	destination.KeyboardAccelerators.Add(
+		//		new UI.Xaml.Input.KeyboardAccelerator
+		//		{
+		//			Modifiers = global::Windows.System.VirtualKeyModifiers.Control,
+		//			Key = (global::Windows.System.VirtualKey)(char.ToUpperInvariant(source.Text[0])),
+		//		});
+		//}
 
 		partial void DisconnectingHandler(PlatformView platformView)
 		{
@@ -176,6 +143,66 @@ namespace Microsoft.Maui.Handlers
 				handler.MauiContext.GetNavigationRootManager().SetToolbar(toolBar);
 			}
 		}
+
+		public static void MapContextFlyout(IViewHandler handler, IView view)
+		{
+			if (view is IContextFlyoutContainer contextFlyoutContainer)
+			{
+				MapContextFlyout(handler, contextFlyoutContainer);
+			}
+		}
+
+		internal static void MapContextFlyout(IElementHandler handler, IContextFlyoutContainer contextFlyoutContainer)
+		{
+			_ = handler.MauiContext ?? throw new InvalidOperationException($"The handler's {nameof(handler.MauiContext)} cannot be null.");
+
+			if (contextFlyoutContainer.ContextFlyout != null)
+			{
+				// This will set the MauiContext and get everything created first
+				var handler2 = contextFlyoutContainer.ContextFlyout.ToHandler(handler.MauiContext);
+
+
+				//var platformView = contextFlyoutContainer.ContextFlyout.ToPlatform() ?? throw new InvalidOperationException($"Unable to convert view to {typeof(PlatformView)}");
+
+				object? o;
+				if (contextFlyoutContainer.ContextFlyout is IReplaceableView replaceableView && replaceableView.ReplacedView != contextFlyoutContainer.ContextFlyout)
+					o = replaceableView.ReplacedView.ToPlatform();
+
+
+				_ = contextFlyoutContainer.ContextFlyout.Handler ?? throw new InvalidOperationException($"{nameof(MauiContext)} should have been set on parent.");
+
+				if (contextFlyoutContainer.ContextFlyout.Handler is IViewHandler viewHandler)
+				{
+					if (viewHandler.ContainerView is PlatformView containerView)
+						o = containerView;
+
+					if (viewHandler.PlatformView is PlatformView platformView)
+						o = platformView;
+				}
+
+				o = contextFlyoutContainer.ContextFlyout.Handler?.PlatformView;
+
+				if (handler.PlatformView is Microsoft.UI.Xaml.UIElement uiElement && o is FlyoutBase flyoutBase)
+				{
+					uiElement.ContextFlyout = flyoutBase;
+				}
+			}
+		}
+
+		public override void SetVirtualView(IElement view)
+		{
+			base.SetVirtualView(view);
+
+			var contextContainer = (IContextFlyoutContainer)view;
+
+			// TODO: From MenuBarHandler.Windows.cs - what do we need here?
+
+			//foreach (var item in ((IMenuBar)view))
+			//{
+			//	Add(item);
+			//}
+		}
+
 
 		public virtual bool NeedsContainer
 		{
